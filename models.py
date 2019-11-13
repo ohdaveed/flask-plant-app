@@ -1,14 +1,13 @@
-import date
-
+import datetime
 from peewee import *
 
 DATABASE = SqliteDatabase('plants.sqlite')
 
 class Plant(Model):
 	name = CharField()
-	scientific_name = Charfield()
-	order = Charfield()
-	image = Charfield()
+	scientific_name = CharField()
+	order = CharField()
+	image = CharField()
 	created_at = DateTimeField(default=datetime.datetime.now)
 
 	class Meta:
