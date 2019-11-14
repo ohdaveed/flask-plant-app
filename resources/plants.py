@@ -53,3 +53,11 @@ def update_plant(id):
 
 	return jsonify(data=plant_dict, status={"code": 200, "message": "resource updated successfully"})
 
+#Delete Route
+@plant.route('/<id>', methods=["Delete"])
+def delete_plant(id):
+	query = models.Plant.delete().where(models.Plant.id == id)
+	query.execute()
+	return jsonify(data='resource successfully deleted', 
+		status={"code": 200,
+		"message": "resource deleted successfully"})
