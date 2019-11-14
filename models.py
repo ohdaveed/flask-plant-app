@@ -5,9 +5,9 @@ DATABASE = SqliteDatabase('plants.sqlite')
 
 class Plant(Model):
 	name = CharField()
-	scientific_name = CharField()
-	order = CharField()
-	image = CharField()
+	scientific_name = CharField(null=True)
+	ordr = CharField(null=True)
+	image = CharField(null=True)
 	created_at = DateTimeField(default=datetime.datetime.now)
 
 	class Meta:
