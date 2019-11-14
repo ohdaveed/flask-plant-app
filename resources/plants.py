@@ -29,3 +29,27 @@ def create_plants():
 	plant_dict = model_to_dict(plant)
 
 	return jsonify(data=plant_dict, status={"code": 201, "message": "Success"})
+
+# Show route
+@plant.route('/<id>', methods=["GET"])
+def get_one_plant(id):
+	print(id)
+
+	plant = models.Plant.get_by_id(id)
+
+	return jsonify(data=model_to_dict(plant), status={"code": 200, "message": "Success"})
+
+# Update Route
+@plant.route('/<id>', methods=['PUT'])
+def update_plant(id):
+	payload = request.get_json()
+
+	query = models.Plant.update(**payload).where(models.Plant.id == id)
+	query.execute()
+
+	plant = models.Plant.get_by_id(id)
+
+	plant_dict = model_to_dict(plant)
+
+	return jsonify(data=plant_dict, status={"code": 200, "message": "resource updated successfully"})
+
