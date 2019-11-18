@@ -3,6 +3,13 @@ from peewee import *
 
 DATABASE = SqliteDatabase('plants.sqlite')
 
+class User(UserMixin, Model):
+	username = CharField(unique=True)
+	password = CharField()
+
+	class Meta:
+		database = DATABASE
+
 class Plant(Model):
 	name = CharField()
 	scientific_name = CharField(null=True)
@@ -15,6 +22,6 @@ class Plant(Model):
 
 def initialize():
 	DATABASE.connect()
-	DATABASE.create_tables([Plant], safe=True)
+	DATABASE.create_tables([Plant, User], safe=True)
 	print("Tables Created")
 	DATABASE.close()
