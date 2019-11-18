@@ -1,5 +1,6 @@
 import datetime
 from peewee import *
+from flask_login import UserMixin
 
 DATABASE = SqliteDatabase('plants.sqlite')
 
@@ -13,7 +14,7 @@ class User(UserMixin, Model):
 class Plant(Model):
 	name = CharField()
 	scientific_name = CharField(null=True)
-	ordr = CharField(null=True)
+	owner = ForeignKeyField(User, backref='dogs')
 	image = CharField(null=True)
 	created_at = DateTimeField(default=datetime.datetime.now)
 
