@@ -68,7 +68,7 @@ def register():
                 data=user_dict,
                 status={
                     "code": 201,
-                    "message": "Successfully registered {}".format(user_dict["email"]),
+                    "message": "Successfully registered {}".format(user_dict["username"]),
                 },
             ),
             201,
@@ -96,10 +96,48 @@ def list_users():
 
         return jsonify(data=user_dicts_without_pw), 200
 
+@users.route('/login', methods=['POST'])
+def login():
+    payload = request.get_json()
+
+    try:
+        #look up user by username
+        user = models.User.get(models.User.username == payload['username'])
+
+        #so we can acces the info in username
+
+        user_dict = model_to_dict(user)
+
+        # check user's password using bcrypt
+
+        if(check_password_hash(user_dict['password'], payload['password'])):
+
+            #user can move forward
+
+            login_user(user)
+
+            del user_dict['password']
+
+            return jsonify(data=user_dict, status={'code': 200, 'message': "successfully logged in {}".format(user_dict['username'])}), 200
+    else:
+        print('password aint correct')
+        return jsonify(data={}, status={'code': 401, 'message':"Email or password is incorrect"}), 401
 
 @users.route("/logged_in", methods=["GET"])
-def get_logged_in_users():
-    print(current_user)
-    print(type(current_user))
-    print(model_to_dict(current_user))
-    return "check terminal"
+def get_logged_in_user():
+
+    if not current_user.is_authenticated:
+        return jsonify(data={}, status={
+            'code': 401,
+            'message': "no user is currently logged in"
+            }), 401
+    else:
+        print(current_user) # inspect just prints current user's ID
+        print(type(current_user)) # what is a werkzeug anyway?
+        user_dict = model_to_dict(current_user)
+        print(user_dict)
+        user_dict.pop('password')
+        return jsonify(data=user_dict, status={
+            'code': 200,
+            'message': "Current user is {}".format(user_dict['username'])
+            }), 200
