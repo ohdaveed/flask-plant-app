@@ -1,6 +1,7 @@
 import datetime
-from peewee import *
+
 from flask_login import UserMixin
+from peewee import *
 
 DATABASE = SqliteDatabase("plants.sqlite")
 

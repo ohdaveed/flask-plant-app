@@ -1,14 +1,13 @@
-from flask import Flask, jsonify, g
+import models
+from flask import Flask, g, jsonify
 from flask_cors import CORS
 from flask_login import LoginManager
-
-import models
+from resources.plants import plants
+from resources.users import users
 
 DEBUG = True
 PORT = 8000
 
-from resources.plants import plants
-from resources.users import users
 
 login_manager = LoginManager()
 

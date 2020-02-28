@@ -1,8 +1,7 @@
 import models
-
-from flask import request, jsonify, Blueprint
-from flask_bcrypt import generate_password_hash, check_password_hash
-from flask_login import login_user, current_user
+from flask import Blueprint, jsonify, request
+from flask_bcrypt import check_password_hash, generate_password_hash
+from flask_login import current_user, login_user
 from playhouse.shortcuts import model_to_dict
 
 # make this a blueprint
@@ -96,15 +95,16 @@ def list_users():
 
         return jsonify(data=user_dicts_without_pw), 200
 
+
 @users.route('/login', methods=['POST'])
 def login():
     payload = request.get_json()
 
     try:
-        #look up user by username
+        # look up user by username
         user = models.User.get(models.User.username == payload['username'])
 
-        #so we can acces the info in username
+        # so we can acces the info in username
 
         user_dict = model_to_dict(user)
 
@@ -112,7 +112,7 @@ def login():
 
         if(check_password_hash(user_dict['password'], payload['password'])):
 
-            #user can move forward
+            # user can move forward
 
             login_user(user)
 
@@ -121,7 +121,8 @@ def login():
             return jsonify(data=user_dict, status={'code': 200, 'message': "successfully logged in {}".format(user_dict['username'])}), 200
     else:
         print('password aint correct')
-        return jsonify(data={}, status={'code': 401, 'message':"Email or password is incorrect"}), 401
+        return jsonify(data={}, status={'code': 401, 'message': "Email or password is incorrect"}), 401
+
 
 @users.route("/logged_in", methods=["GET"])
 def get_logged_in_user():
@@ -130,14 +131,14 @@ def get_logged_in_user():
         return jsonify(data={}, status={
             'code': 401,
             'message': "no user is currently logged in"
-            }), 401
+        }), 401
     else:
-        print(current_user) # inspect just prints current user's ID
-        print(type(current_user)) # what is a werkzeug anyway?
+        print(current_user)  # inspect just prints current user's ID
+        print(type(current_user))  # what is a werkzeug anyway?
         user_dict = model_to_dict(current_user)
         print(user_dict)
         user_dict.pop('password')
         return jsonify(data=user_dict, status={
             'code': 200,
             'message': "Current user is {}".format(user_dict['username'])
-            }), 200
+        }), 200
